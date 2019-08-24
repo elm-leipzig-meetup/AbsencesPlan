@@ -99,7 +99,7 @@ body {
     margin-top: 120px;
     margin-left: 30%;
     margin-right: 30%;
-    min-width: 300px;
+    width: 490px;
     border: 2px solid #a6b3b3;
 	max-height: 80%;
 	overflow-y: auto;
@@ -149,4 +149,3 @@ input[type="button"] {
     border: black 0.5pt solid;
     padding: 3px;
 }
-

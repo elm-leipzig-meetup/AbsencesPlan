@@ -1,6 +1,7 @@
 module Devs.DatabaseDecode exposing ( dbDecoder )
 
 import Json.Decode as Decode exposing (Decoder, field, succeed)
+import Debug exposing (log)
 
 import Devs.Objects as O exposing (..)
 

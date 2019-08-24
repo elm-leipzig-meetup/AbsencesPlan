@@ -5,21 +5,25 @@ import Html.Attributes as Attr exposing ( .. )
 import Html.Events as Ev exposing ( onInput, onFocus )
 import Html.Events.Extra as EvE exposing ( onChange )
 
+import Debug exposing (log)
+
 import Devs.Objects as O exposing ( Model )
 import Devs.TypeObject as TO exposing ( .. )
 import Devs.Utils as DU exposing ( dateToString, dateToDisplaystring, holTypeToString, holTypeToInt, intToHoltype )
 import Templates.Utils as TU exposing ( getOption )
 
+--524
+
 getConfigForm: Model -> Html Msg
 getConfigForm model =
   if model.showConfigForm
-    then getFormDiv (getConfigRow model) TO.ToggleConfigForm
+    then getFormDiv model.pageWidth (getConfigRow model) TO.ToggleConfigForm
     else Html.text ""
 
 getHolidayForm: Model -> Html Msg
 getHolidayForm model =
   if model.showHolidayForm
-    then getFormDiv (getHolidayRow model) TO.ToggleHolidayForm
+    then getFormDiv model.pageWidth (getHolidayRow model) TO.ToggleHolidayForm
     else Html.text ""
 
 getHolidayRow: Model -> Html Msg
@@ -85,10 +89,13 @@ getConfigRow model =
     ]
   ]
 
-getFormDiv: Html Msg -> Msg -> Html Msg
-getFormDiv subForm event =
+getFormDiv: Int -> Html Msg -> Msg -> Html Msg
+getFormDiv width subForm event =
+  let
+    leftSpace = (width - 524) // 2
+  in
     Html.div [ Attr.class "formBG" ][
-      Html.div [ Attr.class "formDiv" ] [
+      Html.div [ Attr.class "formDiv", Attr.style "margin-left" ((String.fromInt leftSpace) ++ "px") ] [
         subForm
         , Html.div[ Attr.class "formDivRow"][ TU.getActionButton "schließen" event ]
       ]

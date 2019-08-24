@@ -1,10 +1,13 @@
 port module HolidayPlan exposing (..)
 
-import Devs.Ports as P exposing (setDataFromStore)
+import Devs.Ports as P exposing (setDataFromStore, setDimOfElement)
 
 import Browser exposing (..)
 import Html exposing (..)
 import Html.Attributes as Attr exposing ( .. )
+import Html.Events as Ev exposing ( on )
+
+import Json.Decode as Json
 
 import Devs.Objects as O exposing (Model, initialModel)
 import Devs.Update as U exposing ( update )
@@ -21,7 +24,7 @@ import Debug exposing (log)
 -- View
 view : O.Model -> Html TO.Msg
 view model =
-    Html.div [] (
+    Html.div [ ] (
       List.concat [
         [ TF.getConfigForm model
           , TF.getHolidayForm model
@@ -57,7 +60,14 @@ main =
         }
 
 subscriptions : O.Model -> Sub TO.Msg
-subscriptions model = P.setDataFromStore TO.ReadDataFromPublish
+subscriptions model = Sub.batch [
+    P.setDataFromStore TO.ReadDataFromPublish
+    , P.setDimOfElement TO.SetDomDim
+  ]
 
 init : ( O.Model, Cmd Msg )
-init =  ( O.initialModel, P.pushDataToStore {config=O.initialModel.config, holList=O.initialModel.holList, init=True} )
+init =  ( O.initialModel, Cmd.batch [
+      P.pushDataToStore {config=O.initialModel.config, holList=O.initialModel.holList, init=True}
+      , P.getDimOfElement "app"
+    ]
+  )

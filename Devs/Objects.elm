@@ -18,6 +18,13 @@ type alias Model = {
   , showConfigForm: Bool
   , showHolidayForm: Bool
   , currentSeed: Maybe Random.Seed
+  , pageWidth: Int
+  , pageHeight: Int
+  }
+
+type alias EleDimensions = {
+  width : Int
+  , height : Int
   }
 
 type alias TransferObj = {
@@ -95,6 +102,8 @@ initialModel = {
   , tmpHol=Nothing
   , showConfigForm=False
   , showHolidayForm=False
+  , pageWidth=0
+  , pageHeight=0
   }
 
 getEmptyConfig = {

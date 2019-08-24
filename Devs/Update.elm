@@ -9,8 +9,9 @@ import File.Download as D exposing ( string )
 import File.Select as S exposing ( file )
 import Json.Encode as Encode exposing (..)
 import Json.Decode as Decode exposing (..)
+import Debug exposing (log)
 
-import Devs.Ports as P exposing (pushDataToStore)
+import Devs.Ports as P exposing (pushDataToStore, getDimOfElement)
 
 import Devs.Objects as O exposing (..)
 import Devs.TypeObject as TO exposing (..)
@@ -25,6 +26,8 @@ update msg model =
         NoOp -> ( model , Cmd.none)
         NoOpStr val -> ( model , Cmd.none)
         NoOpInt val -> ( model , Cmd.none)
+        GetDomDim id -> ( model , P.getDimOfElement id)
+        SetDomDim dim -> ( { model | pageWidth=dim.width, pageHeight=dim.height }, Cmd.none)
         ReadDataFromPublish obj -> ( { model | config=obj.config, holList=obj.holList } , Task.perform TO.SetTimeZone T.here)
         SetMaxHol val ->
           let

@@ -32,3 +32,5 @@ type Msg =
   | ImportDB
   | DBLoaded File.File
   | DBDecode String
+  | GetDomDim String
+  | SetDomDim EleDimensions
