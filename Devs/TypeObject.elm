@@ -2,6 +2,7 @@ module Devs.TypeObject exposing (..)
 
 import Http
 import Time exposing (Posix, Zone)
+import File
 
 import Devs.Objects as O exposing (..)
 
@@ -27,3 +28,7 @@ type Msg =
   | SetType String
   | AddHoliday
   | RemoveHoliday String
+  | DownloadDB
+  | ImportDB
+  | DBLoaded File.File
+  | DBDecode String

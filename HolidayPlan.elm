@@ -36,6 +36,10 @@ view model =
             ,TU.getActionButton "Konfiguration" (TO.ToggleConfigForm)
             , Html.span [ Attr.style "margin-left" "5pt" ][]
             , TU.getActionButton "Abwesenheiten" (TO.ToggleHolidayForm)
+            , Html.span [ Attr.style "margin-left" "5pt" ][]
+            , TU.getActionButton "Export" (TO.DownloadDB)
+            , Html.span [ Attr.style "margin-left" "5pt" ][]
+            , TU.getActionButton "Import" (TO.ImportDB)
           ]
         ]
         ,  ( List.map TM.getMonth model.calendar.months )

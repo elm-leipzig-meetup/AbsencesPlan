@@ -90,17 +90,19 @@ initialModel = {
     name = 2019
     , months=[]
   }
-  , config = {
-    maxHoliday=30
-    , maxLearningHoliday=5
-    , holidayURL="https://ipty.de/feiertag/api.php?do=getFeiertage&loc=[fedState]&outformat=Y-m-d&jahr=[year]"
-    , fedState = "NI"
-    , random=0
-  }
+  , config = getEmptyConfig
   , holList=[]
   , tmpHol=Nothing
   , showConfigForm=False
   , showHolidayForm=False
+  }
+
+getEmptyConfig = {
+  maxHoliday=30
+  , maxLearningHoliday=5
+  , holidayURL="https://ipty.de/feiertag/api.php?do=getFeiertage&loc=[fedState]&outformat=Y-m-d&jahr=[year]"
+  , fedState = "NI"
+  , random=0
   }
 
 getEpmtyHoliday = {
