@@ -1,0 +1,150 @@
+@media print {
+    .no-print, .no-print * {
+        display: none !important;
+    }
+    body {
+        font-size: 9pt !important;
+    }
+    .monthDiv {
+        height: 145px !important;
+    }
+}
+
+body {
+    font-family: monospace;
+    font-size: 15pt;
+}
+
+.monthDiv {
+    float: left;
+    height: 215px;
+    margin: 5pt;
+    border: black solid 0.5pt;
+    padding: 2pt;
+    background: white;
+    overflow: hidden;
+}
+
+.monthDiv th {
+    background: aliceblue;
+    padding: 0px 5px;
+    text-align: right;
+}
+
+.summeryDiv {
+    clear: both;
+}
+
+.summeryDiv th {
+    background: aliceblue;
+    text-align: right;
+}
+.summeryDiv td {
+    text-align: right;
+}
+
+.publicHoliday {
+    background: grey;
+    color: white;
+    cursor: help;
+}
+
+.otherMonth {
+    background: ivory;
+    color: white;
+}
+
+.illness {
+    background: chocolate;
+    color: white;
+    cursor: help;
+}
+
+.holiday {
+    background: brown;
+    color: white;
+    cursor: help;
+}
+
+.weekend {
+    background: grey;
+    color: white;
+}
+
+.formBG {
+	z-index: 1010;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.formDiv {
+	background-color: #fff;
+    margin-bottom: 30px;
+    padding: 15px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    -ms-box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    -o-box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    margin-top: 120px;
+    margin-left: 30%;
+    margin-right: 30%;
+    min-width: 300px;
+    border: 2px solid #a6b3b3;
+	max-height: 80%;
+	overflow-y: auto;
+    margin-top: 50px;
+}
+
+.formDivRow Div {
+	padding-bottom: 5px;
+}
+
+input, select, textarea {
+    margin: 1px;
+    padding: 5px;
+    border:1px solid #cccccc;
+}
+
+input[type="number"] {
+    width: 30pt;
+}
+
+input[type="text"], input[type="password"], select {
+    background-clip: padding-box;
+    border: 1px solid #cccccc;
+    padding: 4px ;
+}
+
+input[type="url"] {
+    width: 60%;
+}
+
+label {
+    width: 140pt;
+    display: inline-block;
+}
+
+input[type="button"] {
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid silver;
+    padding: 0px 12px;
+    background-image: linear-gradient(darkgray, #EEEEEE);
+    display: inline-block;
+    cursor: pointer;
+}
+
+.holTable td {
+    border: black 0.5pt solid;
+    padding: 3px;
+}
+
