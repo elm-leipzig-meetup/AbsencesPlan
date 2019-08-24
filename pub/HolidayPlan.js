@@ -8028,7 +8028,7 @@ var author$project$Devs$Update$update = F2(
 					A2(elm$core$Task$perform, author$project$Devs$TypeObject$SetYear, elm$time$Time$now));
 			case 6:
 				var ts = msg.a;
-				var m = _Utils_update(
+				var m = (model.ai > 1977) ? model : _Utils_update(
 					model,
 					{
 						ai: A2(elm$time$Time$toYear, model.aK, ts)
@@ -8184,17 +8184,18 @@ var author$project$Devs$Update$update = F2(
 							])));
 			case 9:
 				var tmpHol = (!model.aG) ? elm$core$Maybe$Just(author$project$Devs$Objects$getEpmtyHoliday) : elm$core$Maybe$Nothing;
+				var cmds = model.aG ? elm$core$Platform$Cmd$batch(
+					_List_fromArray(
+						[
+							author$project$Devs$Ports$pushDataToStore(
+							{aQ: model.aQ, a4: model.a4, ba: false}),
+							author$project$Devs$Utils$setPublicHolidays(model)
+						])) : elm$core$Platform$Cmd$none;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aG: !model.aG, aL: tmpHol}),
-					elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[
-								author$project$Devs$Ports$pushDataToStore(
-								{aQ: model.aQ, a4: model.a4, ba: false}),
-								author$project$Devs$Utils$setPublicHolidays(model)
-							])));
+					cmds);
 			case 19:
 				return _Utils_Tuple2(
 					model,

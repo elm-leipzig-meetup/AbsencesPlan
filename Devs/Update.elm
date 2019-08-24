@@ -57,7 +57,8 @@ update msg model =
         SetTimeZone zone -> ( { model | timeZone = zone } , Task.perform TO.SetYear T.now)
         SetYear ts ->
           let
-            m = { model | currentYear = T.toYear model.timeZone ts }
+            m = if model.currentYear > 1977 then model
+              else { model | currentYear = T.toYear model.timeZone ts }
           in
             ( m , DU.setPublicHolidays m)
         SetFrom val ->
@@ -102,8 +103,11 @@ update msg model =
             tmpHol = if not model.showHolidayForm
               then Just O.getEpmtyHoliday
               else Nothing
+            cmds = if model.showHolidayForm
+              then Cmd.batch [P.pushDataToStore {config=model.config, holList=model.holList, init=False}, DU.setPublicHolidays model]
+              else Cmd.none
           in
-            ( { model | showHolidayForm = not model.showHolidayForm, tmpHol = tmpHol } , Cmd.batch [P.pushDataToStore {config=model.config, holList=model.holList, init=False}, DU.setPublicHolidays model] )
+            ( { model | showHolidayForm = not model.showHolidayForm, tmpHol = tmpHol }, cmds )
         DownloadDB -> ( model, D.string "holidayDB.json" "application/json" (Encode.encode 0 (HE.dbEncoder {config=model.config, holList=model.holList, init=False})))
         ImportDB -> ( model, S.file ["application/json"] DBLoaded )
         DBLoaded file -> ( model , Task.perform DBDecode (File.toString file))
