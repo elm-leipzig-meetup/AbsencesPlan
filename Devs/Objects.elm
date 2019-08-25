@@ -15,8 +15,10 @@ type alias Model = {
   , config: Config
   , holList: List Holiday
   , tmpHol: Maybe Holiday
+  , tmpPw: Maybe String
   , showConfigForm: Bool
   , showHolidayForm: Bool
+  , showLoginForm: Bool
   , currentSeed: Maybe Random.Seed
   , pageWidth: Int
   , pageHeight: Int
@@ -46,6 +48,8 @@ type alias Config = {
   , holidayURL: String
   , fedState: String
   , random: Int
+  , password: Maybe String
+  , loggedIn: Bool
   }
 
 type alias Year = {
@@ -100,8 +104,10 @@ initialModel = {
   , config = getEmptyConfig
   , holList=[]
   , tmpHol=Nothing
+  , tmpPw=Nothing
   , showConfigForm=False
   , showHolidayForm=False
+  , showLoginForm=False
   , pageWidth=0
   , pageHeight=0
   }
@@ -112,6 +118,8 @@ getEmptyConfig = {
   , holidayURL="https://ipty.de/feiertag/api.php?do=getFeiertage&loc=[fedState]&outformat=Y-m-d&jahr=[year]"
   , fedState = "NI"
   , random=0
+  , password=Nothing
+  , loggedIn=False
   }
 
 getEpmtyHoliday = {

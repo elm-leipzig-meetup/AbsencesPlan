@@ -22,12 +22,14 @@ holListDecoder: Decode.Decoder (List Holiday)
 holListDecoder = Decode.list holDecoder
 
 configDecoder : Decoder Config
-configDecoder = Decode.map5 Config
+configDecoder = Decode.map7 Config
   (field "maxHoliday" Decode.int)
   (field "maxLearningHoliday" Decode.int)
   (field "holidayURL" Decode.string)
   (field "fedState" Decode.string)
   (field "random" Decode.int)
+  (Decode.maybe <| field "password" Decode.string)
+  (field "loggedIn" Decode.bool)
 
 dbDecoder : Decoder TransferObj
 dbDecoder = Decode.map3 TransferObj

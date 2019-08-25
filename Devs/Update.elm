@@ -4,6 +4,7 @@ import Time as T
 import Task
 import UUID exposing (UUID)
 import Random
+import SHA1
 import File
 import File.Download as D exposing ( string )
 import File.Select as S exposing ( file )
@@ -49,6 +50,7 @@ update msg model =
             c = model.config
           in
               ( { model | config = { c | holidayURL = val } } , Cmd.none)
+        SetPW val -> ( { model | tmpPw = (if String.isEmpty val then Nothing else Just val) } , Cmd.none)
         ShiftYear op ->
           let
             newYear = case op of
@@ -98,9 +100,33 @@ update msg model =
               Nothing -> ( model, Cmd.none)
         RemoveHoliday uuid -> ( { model | holList=List.filter (\i -> i.uuid /= uuid) model.holList }, Cmd.none)
         SetPublicHolidays (Ok list) -> ( { model | calendar = DU.fillYear model.currentYear model.timeZone list model.holList } , Cmd.none)
-        SetPublicHolidays (Err error) -> ( model , Cmd.none)
---          ( { model | alertMessage = Just (DU.httpErrorToMessage error) }, Cmd.none)
-        ToggleConfigForm -> ( { model | showConfigForm = not model.showConfigForm } , Cmd.batch [P.pushDataToStore {config=model.config, holList=model.holList, init=False}, DU.setPublicHolidays model] )
+        SetPublicHolidays (Err error) -> ( { model | calendar = DU.fillYear model.currentYear model.timeZone [] model.holList } , Cmd.none)
+        ToggleConfigForm ->
+          let
+            c = model.config
+            c1 = if model.tmpPw /= Nothing && not (String.isEmpty (Maybe.withDefault "" model.tmpPw ))
+              then { c | password = Just (SHA1.toBase64 (SHA1.fromString (Maybe.withDefault "" model.tmpPw ))) }
+              else c
+          in
+            ( { model | showConfigForm = not model.showConfigForm, tmpPw=Nothing, config = c1 } , Cmd.batch [P.pushDataToStore {config=c1, holList=model.holList, init=False}, DU.setPublicHolidays model] )
+        ToggleLoginForm ->
+          let
+            c = model.config
+            hash = if model.tmpPw /= Nothing && not (String.isEmpty (Maybe.withDefault "" model.tmpPw ))
+              then (SHA1.toBase64 (SHA1.fromString (Maybe.withDefault "" model.tmpPw )))
+              else ""
+            c1 = if hash == (Maybe.withDefault "" model.config.password)
+              then { c | loggedIn = True }
+              else c
+          in
+            ( { model | showLoginForm = not model.showLoginForm, tmpPw=Nothing, config=c1 }
+              , P.pushDataToStore {config=c1, holList=model.holList, init=False} )
+        Logout ->
+          let
+            c = model.config
+          in
+            ( { model | config = { c | loggedIn = not model.config.loggedIn } }
+              , P.pushDataToStore {config={ c | loggedIn = not model.config.loggedIn }, holList=model.holList, init=False} )
         ToggleHolidayForm ->
           let
             tmpHol = if not model.showHolidayForm

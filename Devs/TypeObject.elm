@@ -18,11 +18,14 @@ type Msg =
   | SetYear Posix
   | SetPublicHolidays (Result Http.Error (List PublicHoliday))
   | ToggleConfigForm
+  | ToggleLoginForm
+  | Logout
   | ToggleHolidayForm
   | SetMaxHol String
   | SetLHol String
   | SetFedState String
   | SetUrl String
+  | SetPW String
   | SetFrom String
   | SetTo String
   | SetType String

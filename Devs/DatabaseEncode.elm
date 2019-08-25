@@ -4,6 +4,13 @@ import Json.Encode as Encode exposing (..)
 
 import Devs.Objects as Objects exposing (..)
 
+encodeString: Maybe String -> Encode.Value
+encodeString str = case str of
+  Just val -> if String.isEmpty val
+    then Encode.null
+    else Encode.string val
+  Nothing -> Encode.null
+
 dateEncoder: Date -> Encode.Value
 dateEncoder obj =
     Encode.object [
@@ -29,6 +36,8 @@ configEncoder obj =
       , ( "holidayURL", Encode.string obj.holidayURL )
       , ( "fedState", Encode.string obj.fedState )
       , ( "random", Encode.int obj.random )
+      , ( "password", encodeString obj.password )
+      , ( "loggedIn", Encode.bool obj.loggedIn )
     ]
 
 dbEncoder: TransferObj -> Encode.Value

@@ -14,8 +14,8 @@ import Devs.Update as U exposing ( update )
 import Devs.Utils as DU exposing ( setPublicHolidays )
 import Devs.TypeObject as TO exposing ( .. )
 import Templates.Month as TM exposing ( getMonth, getSummeryDiv )
-import Templates.Utils as TU exposing ( getActionButton )
-import Templates.Forms as TF exposing ( getConfigForm, getHolidayForm )
+import Templates.Utils as TU exposing ( getActionButton, showOptionButton )
+import Templates.Forms as TF exposing ( getConfigForm, getHolidayForm,geLoginForm )
 
 import Debug exposing (log)
 
@@ -28,21 +28,25 @@ view model =
       List.concat [
         [ TF.getConfigForm model
           , TF.getHolidayForm model
+          , TF.geLoginForm model
           , Html.h1 [][
             Html.text "Kalender des Jahres "
-            , TU.getActionButton "<" (TO.ShiftYear O.Down)
+            , TU.getActionButton "<" True (TO.ShiftYear O.Down)
             , Html.text (" " ++ (String.fromInt model.calendar.name) ++ " ")
-            , TU.getActionButton ">" (TO.ShiftYear O.Up)
+            , TU.getActionButton ">" True (TO.ShiftYear O.Up)
           ]
           , Html.div [][
             Html.span [ Attr.style "margin-left" "5pt" ][]
-            ,TU.getActionButton "Konfiguration" (TO.ToggleConfigForm)
+            ,TU.getActionButton "Konfiguration" (TU.showOptionButton model) (TO.ToggleConfigForm)
             , Html.span [ Attr.style "margin-left" "5pt" ][]
-            , TU.getActionButton "Abwesenheiten" (TO.ToggleHolidayForm)
+            , TU.getActionButton "Abwesenheiten" (TU.showOptionButton model) (TO.ToggleHolidayForm)
             , Html.span [ Attr.style "margin-left" "5pt" ][]
-            , TU.getActionButton "Export" (TO.DownloadDB)
+            , TU.getActionButton "Export" (TU.showOptionButton model) (TO.DownloadDB)
             , Html.span [ Attr.style "margin-left" "5pt" ][]
-            , TU.getActionButton "Import" (TO.ImportDB)
+            , TU.getActionButton "Import" True (TO.ImportDB)
+            , Html.span [ Attr.style "margin-left" "5pt" ][]
+            , TU.getActionButton "Login" (model.config.password /= Nothing && not model.config.loggedIn) (TO.ToggleLoginForm)
+            , TU.getActionButton "Logout" (model.config.password /= Nothing && model.config.loggedIn) (TO.Logout)
           ]
         ]
         ,  ( List.map TM.getMonth model.calendar.months )
