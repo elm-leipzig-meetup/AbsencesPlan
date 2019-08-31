@@ -5,7 +5,7 @@ import Html.Attributes as Attr exposing (..)
 
 import Devs.Objects as O exposing (Model, Month)
 import Devs.TypeObject as TO exposing ( .. )
-import Devs.Utils as DU exposing ( holTypeToString, isDayForCount )
+import Devs.Utils as DU exposing ( holTypeToString, getDaysForSummery )
 
 getMonth: O.Month -> Html Msg
 getMonth month =
@@ -54,10 +54,10 @@ getWeekday mNr wd =
 getSummeryDiv: O.Model -> Html Msg
 getSummeryDiv model =
   let
-    sumHol = List.sum (List.map (\m -> List.length (List.filter (\d -> DU.isDayForCount d O.Hol) m.days)) model.calendar.months)
-    sumLhol = List.sum (List.map (\m -> List.length (List.filter (\d -> DU.isDayForCount d O.LHol) m.days)) model.calendar.months)
-    sumIll = List.sum (List.map (\m -> List.length (List.filter (\d -> DU.isDayForCount d O.Ill) m.days)) model.calendar.months)
-    sumKar = List.sum (List.map (\m -> List.length (List.filter (\d -> DU.isDayForCount d O.Kar) m.days)) model.calendar.months)
+    sumHol = DU.getDaysForSummery O.Hol model.calendar
+    sumLhol = DU.getDaysForSummery O.LHol model.calendar
+    sumIll = DU.getDaysForSummery O.Ill model.calendar
+    sumKar = DU.getDaysForSummery O.Kar model.calendar
     lHolRow = if sumLhol > 0
       then Html.tr [][
           Html.th [][ Html.text (DU.holTypeToString (DU.intToHoltype 3)) ]

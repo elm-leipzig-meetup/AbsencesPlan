@@ -11,7 +11,6 @@ import Json.Decode as Json
 
 import Devs.Objects as O exposing (Model, initialModel)
 import Devs.Update as U exposing ( update )
-import Devs.Utils as DU exposing ( setPublicHolidays )
 import Devs.TypeObject as TO exposing ( .. )
 import Templates.Month as TM exposing ( getMonth, getSummeryDiv )
 import Templates.Utils as TU exposing ( getActionButton, showOptionButton )

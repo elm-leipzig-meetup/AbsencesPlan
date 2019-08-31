@@ -1,7 +1,8 @@
-module Devs.Utils exposing (getSeed, setPublicHolidays, fillYear, dateToString, dateToDisplaystring, stringToDate, holTypeToString, intToHoltype, holTypeToInt, isDayForCount)
+module Devs.Utils exposing (getSeed, updatePublicHolidayListInConfig, setPublicHolidays, fillYear, dateToString, dateToDisplaystring, stringToDate, holTypeToString, intToHoltype, holTypeToInt, isDayForCount, getDaysForSummery)
 
 import Json.Decode as Decode exposing (Decoder, field, succeed)
 import Json.Encode as Encode exposing (..)
+import Task
 import Http
 import Random
 import Time as T exposing (Zone,Month)
@@ -22,6 +23,15 @@ getSeed model =
   case model.currentSeed of
       Just seed ->  seed
       Nothing -> Random.initialSeed model.config.random
+
+getDaysForSummery: O.HolType -> O.Year -> Int
+getDaysForSummery holType yearCal = List.sum (List.map (\m -> List.length (List.filter (\d -> isDayForCount d holType) m.days)) yearCal.months)
+
+updatePublicHolidayListInConfig: O.Config -> O.PubHolYear -> O.Config
+updatePublicHolidayListInConfig config pubHolYear =
+  if List.length (List.filter (\item -> item.year == pubHolYear.year) config.pubHolList) > 0
+    then config
+    else { config | pubHolList = List.append config.pubHolList [pubHolYear] }
 
 fillYear: Int -> T.Zone -> List O.PublicHoliday -> List O.Holiday -> O.Year
 fillYear year zone pHolidays holidays =
@@ -210,8 +220,17 @@ setPublicHolidays model =
   let
     url1 = String.replace "[year]" (String.fromInt model.currentYear) model.config.holidayURL
     url2 = String.replace "[fedState]" model.config.fedState url1
+    publicHolidaysFromCache = (getPubHolListOfYear model.config.pubHolList model.currentYear model.config.fedState)
   in
-    setPublicHolidaysApi TO.SetPublicHolidays (url2)
+    if List.length publicHolidaysFromCache > 0
+      then Task.succeed (TO.SetPublicHolidaysFromCache publicHolidaysFromCache) |> Task.perform identity
+      else setPublicHolidaysApi TO.SetPublicHolidays (url2)
+
+getPubHolListOfYear: List O.PubHolYear -> Int -> String -> List O.PublicHoliday
+getPubHolListOfYear pubHolYearList currentYear fedState =
+  case List.head (List.filter (\phy -> phy.year == currentYear && phy.fedState == fedState) pubHolYearList) of
+    Just phy -> phy.pubHolList
+    Nothing -> []
 
 setPublicHolidaysApi: (Result Http.Error (List O.PublicHoliday) -> Msg) -> String -> Cmd Msg
 setPublicHolidaysApi event url = myRequest "GET" url (Http.expectJson event (Decode.list Dec.holidayDecoder)) Nothing

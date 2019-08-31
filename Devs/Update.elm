@@ -16,7 +16,7 @@ import Devs.Ports as P exposing (pushDataToStore, getDimOfElement)
 
 import Devs.Objects as O exposing (..)
 import Devs.TypeObject as TO exposing (..)
-import Devs.Utils as DU exposing ( fillYear, stringToDate )
+import Devs.Utils as DU exposing ( updatePublicHolidayListInConfig, fillYear, stringToDate )
 import Devs.DatabaseEncode as HE exposing (dbEncoder)
 import Devs.DatabaseDecode as HD exposing (dbDecoder)
 
@@ -99,7 +99,8 @@ update msg model =
               Just holiday -> ( { model | currentSeed = Just newSeed, holList = List.append model.holList [{ holiday | uuid=UUID.toString newUuid }], tmpHol = Nothing } , Cmd.none)
               Nothing -> ( model, Cmd.none)
         RemoveHoliday uuid -> ( { model | holList=List.filter (\i -> i.uuid /= uuid) model.holList }, Cmd.none)
-        SetPublicHolidays (Ok list) -> ( { model | calendar = DU.fillYear model.currentYear model.timeZone list model.holList } , Cmd.none)
+        SetPublicHolidaysFromCache list -> ( { model | config = (DU.updatePublicHolidayListInConfig model.config {year=model.currentYear, fedState=model.config.fedState, pubHolList=list}), calendar = DU.fillYear model.currentYear model.timeZone list model.holList } , Cmd.none)
+        SetPublicHolidays (Ok list) -> ( { model | config = (DU.updatePublicHolidayListInConfig model.config {year=model.currentYear, fedState=model.config.fedState, pubHolList=list}), calendar = DU.fillYear model.currentYear model.timeZone list model.holList } , Cmd.none)
         SetPublicHolidays (Err error) -> ( { model | calendar = DU.fillYear model.currentYear model.timeZone [] model.holList } , Cmd.none)
         ToggleConfigForm ->
           let

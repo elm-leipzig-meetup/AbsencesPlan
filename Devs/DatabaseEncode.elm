@@ -28,6 +28,21 @@ holidayEncoder obj =
       , ( "uuid", Encode.string obj.uuid )
     ]
 
+publicHolidayEncoder: PublicHoliday -> Encode.Value
+publicHolidayEncoder obj =
+    Encode.object [
+      ( "title", Encode.string obj.title )
+      , ( "date", Encode.string obj.date )
+    ]
+
+pubHolYearEncoder: PubHolYear -> Encode.Value
+pubHolYearEncoder obj =
+    Encode.object [
+      ( "year", Encode.int obj.year )
+      , ( "fedState", Encode.string obj.fedState )
+      , ( "pubHolList", Encode.list publicHolidayEncoder obj.pubHolList )
+    ]
+
 configEncoder: Config -> Encode.Value
 configEncoder obj =
     Encode.object [
@@ -38,6 +53,7 @@ configEncoder obj =
       , ( "random", Encode.int obj.random )
       , ( "password", encodeString obj.password )
       , ( "loggedIn", Encode.bool obj.loggedIn )
+      , ( "pubHolList", Encode.list pubHolYearEncoder obj.pubHolList )
     ]
 
 dbEncoder: TransferObj -> Encode.Value

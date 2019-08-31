@@ -50,6 +50,7 @@ type alias Config = {
   , random: Int
   , password: Maybe String
   , loggedIn: Bool
+  , pubHolList: List PubHolYear
   }
 
 type alias Year = {
@@ -86,6 +87,12 @@ type alias Date = {
   , year: Int
   }
 
+type alias PubHolYear = {
+  year: Int
+  , fedState: String
+  , pubHolList: List PublicHoliday
+  }
+
 type alias PublicHoliday = {
   title: String
   , date: String
@@ -120,6 +127,7 @@ getEmptyConfig = {
   , random=0
   , password=Nothing
   , loggedIn=False
+  , pubHolList=[]
   }
 
 getEpmtyHoliday = {
