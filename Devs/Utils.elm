@@ -1,4 +1,4 @@
-module Devs.Utils exposing (getSeed, updatePublicHolidayListInConfig, setPublicHolidays, fillYear, dateToString, dateToDisplaystring, stringToDate, holTypeToString, intToHoltype, holTypeToInt, isDayForCount, getDaysForSummery)
+module Devs.Utils exposing (getSeed, updatePublicHolidayListInConfig, getPubHolListOfYear, setPublicHolidays, fillYear, dateToString, dateToDisplaystring, stringToDate, holTypeToString, intToHoltype, holTypeToInt, isDayForCount, getDaysForSummery)
 
 import Json.Decode as Decode exposing (Decoder, field, succeed)
 import Json.Encode as Encode exposing (..)
@@ -220,11 +220,8 @@ setPublicHolidays model =
   let
     url1 = String.replace "[year]" (String.fromInt model.currentYear) model.config.holidayURL
     url2 = String.replace "[fedState]" model.config.fedState url1
-    publicHolidaysFromCache = (getPubHolListOfYear model.config.pubHolList model.currentYear model.config.fedState)
   in
-    if List.length publicHolidaysFromCache > 0
-      then Task.succeed (TO.SetPublicHolidaysFromCache publicHolidaysFromCache) |> Task.perform identity
-      else setPublicHolidaysApi TO.SetPublicHolidays (url2)
+    setPublicHolidaysApi TO.SetPublicHolidays url2
 
 getPubHolListOfYear: List O.PubHolYear -> Int -> String -> List O.PublicHoliday
 getPubHolListOfYear pubHolYearList currentYear fedState =

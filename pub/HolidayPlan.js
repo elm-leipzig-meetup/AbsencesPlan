@@ -6639,10 +6639,10 @@ var author$project$Devs$Ports$pushDataToStore = _Platform_outgoingPort(
 				]));
 	});
 var author$project$Devs$TypeObject$DBDecode = function (a) {
-	return {$: 26, a: a};
+	return {$: 25, a: a};
 };
 var author$project$Devs$TypeObject$DBLoaded = function (a) {
-	return {$: 25, a: a};
+	return {$: 24, a: a};
 };
 var author$project$Devs$TypeObject$SetTimeZone = function (a) {
 	return {$: 5, a: a};
@@ -7484,6 +7484,22 @@ var author$project$Devs$Utils$fillYear = F4(
 		var months = A4(author$project$Devs$Utils$getMonths, fDoY, z, pHolidays, holidays);
 		return {ao: months, M: year};
 	});
+var author$project$Devs$Utils$getPubHolListOfYear = F3(
+	function (pubHolYearList, currentYear, fedState) {
+		var _n0 = elm$core$List$head(
+			A2(
+				elm$core$List$filter,
+				function (phy) {
+					return _Utils_eq(phy.aS, currentYear) && _Utils_eq(phy.aj, fedState);
+				},
+				pubHolYearList));
+		if (!_n0.$) {
+			var phy = _n0.a;
+			return phy.aA;
+		} else {
+			return _List_Nil;
+		}
+	});
 var elm$random$Random$initialSeed = function (x) {
 	var _n0 = elm$random$Random$next(
 		A2(elm$random$Random$Seed, 0, 1013904223));
@@ -7505,25 +7521,6 @@ var author$project$Devs$Utils$getSeed = function (model) {
 var author$project$Devs$TypeObject$SetPublicHolidays = function (a) {
 	return {$: 7, a: a};
 };
-var author$project$Devs$TypeObject$SetPublicHolidaysFromCache = function (a) {
-	return {$: 8, a: a};
-};
-var author$project$Devs$Utils$getPubHolListOfYear = F3(
-	function (pubHolYearList, currentYear, fedState) {
-		var _n0 = elm$core$List$head(
-			A2(
-				elm$core$List$filter,
-				function (phy) {
-					return _Utils_eq(phy.aS, currentYear) && _Utils_eq(phy.aj, fedState);
-				},
-				pubHolYearList));
-		if (!_n0.$) {
-			var phy = _n0.a;
-			return phy.aA;
-		} else {
-			return _List_Nil;
-		}
-	});
 var author$project$Devs$Decode$holidayDecoder = A3(
 	elm$json$Json$Decode$map2,
 	author$project$Devs$Objects$PublicHoliday,
@@ -8364,56 +8361,6 @@ var elm$core$String$replace = F3(
 			after,
 			A2(elm$core$String$split, before, string));
 	});
-var elm$core$Task$Perform = elm$core$Basics$identity;
-var elm$core$Task$init = elm$core$Task$succeed(0);
-var elm$core$Task$map = F2(
-	function (func, taskA) {
-		return A2(
-			elm$core$Task$andThen,
-			function (a) {
-				return elm$core$Task$succeed(
-					func(a));
-			},
-			taskA);
-	});
-var elm$core$Task$spawnCmd = F2(
-	function (router, _n0) {
-		var task = _n0;
-		return _Scheduler_spawn(
-			A2(
-				elm$core$Task$andThen,
-				elm$core$Platform$sendToApp(router),
-				task));
-	});
-var elm$core$Task$onEffects = F3(
-	function (router, commands, state) {
-		return A2(
-			elm$core$Task$map,
-			function (_n0) {
-				return 0;
-			},
-			elm$core$Task$sequence(
-				A2(
-					elm$core$List$map,
-					elm$core$Task$spawnCmd(router),
-					commands)));
-	});
-var elm$core$Task$onSelfMsg = F3(
-	function (_n0, _n1, _n2) {
-		return elm$core$Task$succeed(0);
-	});
-var elm$core$Task$cmdMap = F2(
-	function (tagger, _n0) {
-		var task = _n0;
-		return A2(elm$core$Task$map, tagger, task);
-	});
-_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
-var elm$core$Task$command = _Platform_leaf('Task');
-var elm$core$Task$perform = F2(
-	function (toMessage, task) {
-		return elm$core$Task$command(
-			A2(elm$core$Task$map, toMessage, task));
-	});
 var author$project$Devs$Utils$setPublicHolidays = function (model) {
 	var url1 = A3(
 		elm$core$String$replace,
@@ -8421,12 +8368,7 @@ var author$project$Devs$Utils$setPublicHolidays = function (model) {
 		elm$core$String$fromInt(model.ag),
 		model.aW.be);
 	var url2 = A3(elm$core$String$replace, '[fedState]', model.aW.aj, url1);
-	var publicHolidaysFromCache = A3(author$project$Devs$Utils$getPubHolListOfYear, model.aW.aA, model.ag, model.aW.aj);
-	return (elm$core$List$length(publicHolidaysFromCache) > 0) ? A2(
-		elm$core$Task$perform,
-		elm$core$Basics$identity,
-		elm$core$Task$succeed(
-			author$project$Devs$TypeObject$SetPublicHolidaysFromCache(publicHolidaysFromCache))) : A2(author$project$Devs$Utils$setPublicHolidaysApi, author$project$Devs$TypeObject$SetPublicHolidays, url2);
+	return A2(author$project$Devs$Utils$setPublicHolidaysApi, author$project$Devs$TypeObject$SetPublicHolidays, url2);
 };
 var elm$core$String$toInt = _String_toInt;
 var elm_community$list_extra$List$Extra$getAt = F2(
@@ -8491,6 +8433,56 @@ var author$project$Devs$Utils$updatePublicHolidayListInConfig = F2(
 var elm$core$Basics$not = _Basics_not;
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var elm$core$Task$Perform = elm$core$Basics$identity;
+var elm$core$Task$init = elm$core$Task$succeed(0);
+var elm$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			elm$core$Task$andThen,
+			function (a) {
+				return elm$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var elm$core$Task$spawnCmd = F2(
+	function (router, _n0) {
+		var task = _n0;
+		return _Scheduler_spawn(
+			A2(
+				elm$core$Task$andThen,
+				elm$core$Platform$sendToApp(router),
+				task));
+	});
+var elm$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			elm$core$Task$map,
+			function (_n0) {
+				return 0;
+			},
+			elm$core$Task$sequence(
+				A2(
+					elm$core$List$map,
+					elm$core$Task$spawnCmd(router),
+					commands)));
+	});
+var elm$core$Task$onSelfMsg = F3(
+	function (_n0, _n1, _n2) {
+		return elm$core$Task$succeed(0);
+	});
+var elm$core$Task$cmdMap = F2(
+	function (tagger, _n0) {
+		var task = _n0;
+		return A2(elm$core$Task$map, tagger, task);
+	});
+_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
+var elm$core$Task$command = _Platform_leaf('Task');
+var elm$core$Task$perform = F2(
+	function (toMessage, task) {
+		return elm$core$Task$command(
+			A2(elm$core$Task$map, toMessage, task));
+	});
 var elm$file$File$toString = _File_toString;
 var elm$core$Basics$never = function (_n0) {
 	never:
@@ -8539,12 +8531,12 @@ var author$project$Devs$Update$update = F2(
 			case 2:
 				var val = msg.a;
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 27:
+			case 26:
 				var id = msg.a;
 				return _Utils_Tuple2(
 					model,
 					author$project$Devs$Ports$getDimOfElement(id));
-			case 28:
+			case 27:
 				var dim = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8558,7 +8550,7 @@ var author$project$Devs$Update$update = F2(
 						model,
 						{aW: obj.aW, bb: obj.bb}),
 					A2(elm$core$Task$perform, author$project$Devs$TypeObject$SetTimeZone, elm$time$Time$here));
-			case 13:
+			case 12:
 				var val = msg.a;
 				var c = model.aW;
 				return _Utils_Tuple2(
@@ -8575,7 +8567,7 @@ var author$project$Devs$Update$update = F2(
 								})
 						}),
 					elm$core$Platform$Cmd$none);
-			case 14:
+			case 13:
 				var val = msg.a;
 				var c = model.aW;
 				return _Utils_Tuple2(
@@ -8592,7 +8584,7 @@ var author$project$Devs$Update$update = F2(
 								})
 						}),
 					elm$core$Platform$Cmd$none);
-			case 15:
+			case 14:
 				var val = msg.a;
 				var c = model.aW;
 				return _Utils_Tuple2(
@@ -8604,7 +8596,7 @@ var author$project$Devs$Update$update = F2(
 								{aj: val})
 						}),
 					elm$core$Platform$Cmd$none);
-			case 16:
+			case 15:
 				var val = msg.a;
 				var c = model.aW;
 				return _Utils_Tuple2(
@@ -8616,7 +8608,7 @@ var author$project$Devs$Update$update = F2(
 								{be: val})
 						}),
 					elm$core$Platform$Cmd$none);
-			case 17:
+			case 16:
 				var val = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8657,7 +8649,7 @@ var author$project$Devs$Update$update = F2(
 				return _Utils_Tuple2(
 					m,
 					author$project$Devs$Utils$setPublicHolidays(m));
-			case 18:
+			case 17:
 				var val = msg.a;
 				var tmpHol = function () {
 					var _n2 = model.aO;
@@ -8680,7 +8672,7 @@ var author$project$Devs$Update$update = F2(
 							aO: elm$core$Maybe$Just(hol)
 						}),
 					elm$core$Platform$Cmd$none);
-			case 19:
+			case 18:
 				var val = msg.a;
 				var tmpHol = function () {
 					var _n3 = model.aO;
@@ -8703,7 +8695,7 @@ var author$project$Devs$Update$update = F2(
 							aO: elm$core$Maybe$Just(hol)
 						}),
 					elm$core$Platform$Cmd$none);
-			case 20:
+			case 19:
 				var val = msg.a;
 				var tmpHol = function () {
 					var _n4 = model.aO;
@@ -8731,7 +8723,7 @@ var author$project$Devs$Update$update = F2(
 							aO: elm$core$Maybe$Just(hol)
 						}),
 					elm$core$Platform$Cmd$none);
-			case 21:
+			case 20:
 				var _n5 = A2(
 					elm$random$Random$step,
 					TSFoster$elm_uuid$UUID$generator,
@@ -8763,7 +8755,7 @@ var author$project$Devs$Update$update = F2(
 				} else {
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				}
-			case 22:
+			case 21:
 				var uuid = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8775,19 +8767,6 @@ var author$project$Devs$Update$update = F2(
 									return !_Utils_eq(i.bG, uuid);
 								},
 								model.bb)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 8:
-				var list = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							ac: A4(author$project$Devs$Utils$fillYear, model.ag, model.aN, list, model.bb),
-							aW: A2(
-								author$project$Devs$Utils$updatePublicHolidayListInConfig,
-								model.aW,
-								{aj: model.aW.aj, aA: list, aS: model.ag})
 						}),
 					elm$core$Platform$Cmd$none);
 			case 7:
@@ -8806,15 +8785,16 @@ var author$project$Devs$Update$update = F2(
 						elm$core$Platform$Cmd$none);
 				} else {
 					var error = msg.a.a;
+					var publicHolidaysFromCache = A3(author$project$Devs$Utils$getPubHolListOfYear, model.aW.aA, model.ag, model.aW.aj);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								ac: A4(author$project$Devs$Utils$fillYear, model.ag, model.aN, _List_Nil, model.bb)
+								ac: A4(author$project$Devs$Utils$fillYear, model.ag, model.aN, publicHolidaysFromCache, model.bb)
 							}),
 						elm$core$Platform$Cmd$none);
 				}
-			case 9:
+			case 8:
 				var c = model.aW;
 				var c1 = ((!_Utils_eq(model.aP, elm$core$Maybe$Nothing)) && (!elm$core$String$isEmpty(
 					A2(elm$core$Maybe$withDefault, '', model.aP)))) ? _Utils_update(
@@ -8836,7 +8816,7 @@ var author$project$Devs$Update$update = F2(
 								{aW: c1, bb: model.bb, bh: false}),
 								author$project$Devs$Utils$setPublicHolidays(model)
 							])));
-			case 10:
+			case 9:
 				var hash = ((!_Utils_eq(model.aP, elm$core$Maybe$Nothing)) && (!elm$core$String$isEmpty(
 					A2(elm$core$Maybe$withDefault, '', model.aP)))) ? TSFoster$elm_sha1$SHA1$toBase64(
 					TSFoster$elm_sha1$SHA1$fromString(
@@ -8853,7 +8833,7 @@ var author$project$Devs$Update$update = F2(
 						{aW: c1, aJ: !model.aJ, aP: elm$core$Maybe$Nothing}),
 					author$project$Devs$Ports$pushDataToStore(
 						{aW: c1, bb: model.bb, bh: false}));
-			case 11:
+			case 10:
 				var c = model.aW;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8871,7 +8851,7 @@ var author$project$Devs$Update$update = F2(
 							bb: model.bb,
 							bh: false
 						}));
-			case 12:
+			case 11:
 				var tmpHol = (!model.aI) ? elm$core$Maybe$Just(author$project$Devs$Objects$getEpmtyHoliday) : elm$core$Maybe$Nothing;
 				var cmds = model.aI ? elm$core$Platform$Cmd$batch(
 					_List_fromArray(
@@ -8885,7 +8865,7 @@ var author$project$Devs$Update$update = F2(
 						model,
 						{aI: !model.aI, aO: tmpHol}),
 					cmds);
-			case 23:
+			case 22:
 				return _Utils_Tuple2(
 					model,
 					A3(
@@ -8897,7 +8877,7 @@ var author$project$Devs$Update$update = F2(
 							0,
 							author$project$Devs$DatabaseEncode$dbEncoder(
 								{aW: model.aW, bb: model.bb, bh: false}))));
-			case 24:
+			case 23:
 				return _Utils_Tuple2(
 					model,
 					A2(
@@ -8905,7 +8885,7 @@ var author$project$Devs$Update$update = F2(
 						_List_fromArray(
 							['application/json']),
 						author$project$Devs$TypeObject$DBLoaded));
-			case 25:
+			case 24:
 				var file = msg.a;
 				return _Utils_Tuple2(
 					model,
@@ -9152,7 +9132,7 @@ var author$project$Devs$TypeObject$ReadDataFromPublish = function (a) {
 	return {$: 3, a: a};
 };
 var author$project$Devs$TypeObject$SetDomDim = function (a) {
-	return {$: 28, a: a};
+	return {$: 27, a: a};
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var author$project$HolidayPlan$subscriptions = function (model) {
@@ -9165,15 +9145,15 @@ var author$project$HolidayPlan$subscriptions = function (model) {
 };
 var author$project$Devs$Objects$Down = 1;
 var author$project$Devs$Objects$Up = 0;
-var author$project$Devs$TypeObject$DownloadDB = {$: 23};
-var author$project$Devs$TypeObject$ImportDB = {$: 24};
-var author$project$Devs$TypeObject$Logout = {$: 11};
+var author$project$Devs$TypeObject$DownloadDB = {$: 22};
+var author$project$Devs$TypeObject$ImportDB = {$: 23};
+var author$project$Devs$TypeObject$Logout = {$: 10};
 var author$project$Devs$TypeObject$ShiftYear = function (a) {
 	return {$: 4, a: a};
 };
-var author$project$Devs$TypeObject$ToggleConfigForm = {$: 9};
-var author$project$Devs$TypeObject$ToggleHolidayForm = {$: 12};
-var author$project$Devs$TypeObject$ToggleLoginForm = {$: 10};
+var author$project$Devs$TypeObject$ToggleConfigForm = {$: 8};
+var author$project$Devs$TypeObject$ToggleHolidayForm = {$: 11};
+var author$project$Devs$TypeObject$ToggleLoginForm = {$: 9};
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
 		case 0:
@@ -9270,7 +9250,7 @@ var author$project$Templates$Forms$getFormDiv = F3(
 				]));
 	});
 var author$project$Devs$TypeObject$SetPW = function (a) {
-	return {$: 17, a: a};
+	return {$: 16, a: a};
 };
 var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
 var elm$html$Html$Events$alwaysStop = function (x) {
@@ -9338,16 +9318,16 @@ var author$project$Templates$Forms$geLoginForm = function (model) {
 		author$project$Devs$TypeObject$ToggleLoginForm) : elm$html$Html$text('');
 };
 var author$project$Devs$TypeObject$SetFedState = function (a) {
-	return {$: 15, a: a};
-};
-var author$project$Devs$TypeObject$SetLHol = function (a) {
 	return {$: 14, a: a};
 };
-var author$project$Devs$TypeObject$SetMaxHol = function (a) {
+var author$project$Devs$TypeObject$SetLHol = function (a) {
 	return {$: 13, a: a};
 };
+var author$project$Devs$TypeObject$SetMaxHol = function (a) {
+	return {$: 12, a: a};
+};
 var author$project$Devs$TypeObject$SetUrl = function (a) {
-	return {$: 16, a: a};
+	return {$: 15, a: a};
 };
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$Attributes$boolProperty = F2(
@@ -9549,18 +9529,18 @@ var author$project$Templates$Forms$getConfigForm = function (model) {
 		author$project$Templates$Forms$getConfigRow(model),
 		author$project$Devs$TypeObject$ToggleConfigForm) : elm$html$Html$text('');
 };
-var author$project$Devs$TypeObject$AddHoliday = {$: 21};
+var author$project$Devs$TypeObject$AddHoliday = {$: 20};
 var author$project$Devs$TypeObject$RemoveHoliday = function (a) {
-	return {$: 22, a: a};
+	return {$: 21, a: a};
 };
 var author$project$Devs$TypeObject$SetFrom = function (a) {
-	return {$: 18, a: a};
+	return {$: 17, a: a};
 };
 var author$project$Devs$TypeObject$SetTo = function (a) {
-	return {$: 19, a: a};
+	return {$: 18, a: a};
 };
 var author$project$Devs$TypeObject$SetType = function (a) {
-	return {$: 20, a: a};
+	return {$: 19, a: a};
 };
 var author$project$Devs$Utils$dateToDisplaystring = function (d) {
 	return A3(

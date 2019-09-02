@@ -17,7 +17,6 @@ type Msg =
   | SetTimeZone Zone
   | SetYear Posix
   | SetPublicHolidays (Result Http.Error (List PublicHoliday))
-  | SetPublicHolidaysFromCache (List PublicHoliday)
   | ToggleConfigForm
   | ToggleLoginForm
   | Logout
