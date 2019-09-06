@@ -69,10 +69,10 @@ getWeek fDoY zone weekDays =
     fWDoW = case List.head weekDays of
       Just wd -> wd
       Nothing -> {name="", day={holidayName=Nothing, holType=Nothing, date={ day = fDoY.day, month = fDoY.month, year = fDoY.year }}}
-    date1 = case List.head (DerCal.getCurrentWeekDates zone (DerC.civilToPosix fDoY)) of
+    date1 = case DerC.civilToPosix fDoY |> DerCal.getCurrentWeekDates zone |> List.head of
       Just date -> T.posixToMillis date
       Nothing -> 0
-    date2 = T.posixToMillis (DerC.civilToPosix (dateToCivil zone fWDoW.day.date))
+    date2 = dateToCivil zone fWDoW.day.date |> DerC.civilToPosix |> T.posixToMillis
     diff = (getDiffOfTS date1 date2) // 7
   in
     { nr=(diff + 1), weekDays=weekDays }
@@ -115,10 +115,10 @@ getHoldayTypeOfDate date hList zone =
 getHoltypeFromDate: DerC.DateRecord -> T.Zone -> O.Holiday -> Maybe O.HolType
 getHoltypeFromDate date zone hol =
   let
-    posix1 = DerC.civilToPosix (dateToCivil zone hol.from)
-    posix2 = DerC.civilToPosix (dateToCivil zone hol.to)
+    posix1 = dateToCivil zone hol.from |> DerC.civilToPosix
+    posix2 = dateToCivil zone hol.to |> DerC.civilToPosix
     diff = (getDiffOfTS (T.posixToMillis posix1) (T.posixToMillis posix2))
-    holList = List.map (\i -> civilToDate (DerC.posixToCivil (DerD.addDays i posix1))) (List.range 0 diff)
+    holList = List.map (\i -> DerD.addDays i posix1 |> DerC.posixToCivil |> civilToDate) (List.range 0 diff)
   in
     case ListE.find (\a -> a.day==date.day && a.month==date.month && a.year==date.year) holList of
       Just h -> Just (intToHoltype hol.holType)
@@ -143,9 +143,9 @@ stringToDate: String -> O.Date
 stringToDate str =
   let
     strArr = String.split "-" str
-    year = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (ListE.getAt 0 strArr)))
-    month = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (ListE.getAt 1 strArr)))
-    day = Maybe.withDefault 0 (String.toInt (Maybe.withDefault "0" (ListE.getAt 2 strArr)))
+    year = ListE.getAt 0 strArr |> Maybe.withDefault "0" |> String.toInt |> Maybe.withDefault 0
+    month = ListE.getAt 1 strArr |> Maybe.withDefault "0" |> String.toInt |> Maybe.withDefault 0
+    day = ListE.getAt 2 strArr |> Maybe.withDefault "0" |> String.toInt |> Maybe.withDefault 0
   in
     {day=day, month=month, year=year}
 
@@ -174,7 +174,7 @@ isDayForCount: O.Day -> O.HolType -> Bool
 isDayForCount d ht =
   let
     zone = T.utc
-    date = (DerC.civilToPosix (dateToCivil zone d.date))
+    date = dateToCivil zone d.date |> DerC.civilToPosix
     wd = DerU.getWeekday zone date
   in
     d.holType == Just (holTypeToInt ht) && d.holidayName == Nothing && (wd /= T.Sat && wd /= T.Sun)

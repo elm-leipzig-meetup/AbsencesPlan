@@ -34,12 +34,12 @@ update msg model =
           let
             c = model.config
           in
-              ( { model | config = { c | maxHoliday = Maybe.withDefault 0 (String.toInt val) } } , Cmd.none)
+              ( { model | config = { c | maxHoliday = String.toInt val |> Maybe.withDefault 0 } } , Cmd.none)
         SetLHol val ->
           let
             c = model.config
           in
-              ( { model | config = { c | maxLearningHoliday = Maybe.withDefault 0 (String.toInt val) } } , Cmd.none)
+              ( { model | config = { c | maxLearningHoliday = String.toInt val |> Maybe.withDefault 0 } } , Cmd.none)
         SetFedState val ->
           let
             c = model.config
@@ -87,19 +87,22 @@ update msg model =
             tmpHol = case model.tmpHol of
               Just holiday -> holiday
               Nothing -> O.getEpmtyHoliday
-            holType = DU.intToHoltype (Maybe.withDefault 0 (String.toInt val))
-            hol = { tmpHol | holType=DU.holTypeToInt holType }
+            holType = String.toInt val |> Maybe.withDefault 0 |> DU.intToHoltype
+            hol = { tmpHol | holType = DU.holTypeToInt holType }
           in
             ( { model | tmpHol = Just hol } , Cmd.none)
         AddHoliday ->
           let
-            ( newUuid, newSeed ) = Random.step UUID.generator (DU.getSeed model)
+            ( newUuid, newSeed ) = DU.getSeed model |> Random.step UUID.generator
           in
             case model.tmpHol of
               Just holiday -> ( { model | currentSeed = Just newSeed, holList = List.append model.holList [{ holiday | uuid=UUID.toString newUuid }], tmpHol = Nothing } , Cmd.none)
               Nothing -> ( model, Cmd.none)
         RemoveHoliday uuid -> ( { model | holList=List.filter (\i -> i.uuid /= uuid) model.holList }, Cmd.none)
-        SetPublicHolidays (Ok list) -> ( { model | config = (DU.updatePublicHolidayListInConfig model.config {year=model.currentYear, fedState=model.config.fedState, pubHolList=list}), calendar = DU.fillYear model.currentYear model.timeZone list model.holList } , Cmd.none)
+        SetPublicHolidays (Ok list) -> (
+          { model | config = (DU.updatePublicHolidayListInConfig model.config {year=model.currentYear, fedState=model.config.fedState, pubHolList=list})
+            , calendar = DU.fillYear model.currentYear model.timeZone list model.holList }
+          , Cmd.none )
         SetPublicHolidays (Err error) ->
           let
             publicHolidaysFromCache = (DU.getPubHolListOfYear model.config.pubHolList model.currentYear model.config.fedState)
@@ -109,15 +112,15 @@ update msg model =
           let
             c = model.config
             c1 = if model.tmpPw /= Nothing && not (String.isEmpty (Maybe.withDefault "" model.tmpPw ))
-              then { c | password = Just (SHA1.toBase64 (SHA1.fromString (Maybe.withDefault "" model.tmpPw ))) }
+              then { c | password = Maybe.withDefault "" model.tmpPw |> SHA1.fromString |> SHA1.toBase64 |> Just }
               else c
           in
             ( { model | showConfigForm = not model.showConfigForm, tmpPw=Nothing, config = c1 } , Cmd.batch [P.pushDataToStore {config=c1, holList=model.holList, init=False}, DU.setPublicHolidays model] )
         ToggleLoginForm ->
           let
             c = model.config
-            hash = if model.tmpPw /= Nothing && not (String.isEmpty (Maybe.withDefault "" model.tmpPw ))
-              then (SHA1.toBase64 (SHA1.fromString (Maybe.withDefault "" model.tmpPw )))
+            hash = if model.tmpPw /= Nothing && (Maybe.withDefault "" model.tmpPw |> String.isEmpty |> not)
+              then Maybe.withDefault "" model.tmpPw |> SHA1.fromString |> SHA1.toBase64
               else ""
             c1 = if hash == (Maybe.withDefault "" model.config.password)
               then { c | loggedIn = True }
@@ -141,7 +144,7 @@ update msg model =
               else Cmd.none
           in
             ( { model | showHolidayForm = not model.showHolidayForm, tmpHol = tmpHol }, cmds )
-        DownloadDB -> ( model, D.string "holidayDB.json" "application/json" (Encode.encode 0 (HE.dbEncoder {config=model.config, holList=model.holList, init=False})))
+        DownloadDB -> ( model,HE.dbEncoder {config=model.config, holList=model.holList, init=False} |> Encode.encode 0 |> D.string "holidayDB.json" "application/json")
         ImportDB -> ( model, S.file ["application/json"] DBLoaded )
         DBLoaded file -> ( model , Task.perform DBDecode (File.toString file))
         DBDecode content ->

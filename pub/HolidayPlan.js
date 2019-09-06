@@ -9353,6 +9353,12 @@ var author$project$Templates$Utils$getOption = F3(
 					elm$html$Html$text(label)
 				]));
 	});
+var author$project$Templates$Forms$getOption = F2(
+	function (model, _n0) {
+		var key = _n0.a;
+		var value = _n0.b;
+		return A3(author$project$Templates$Utils$getOption, key, model.aW.aj, value);
+	});
 var elm$html$Html$label = _VirtualDom_node('label');
 var elm$html$Html$select = _VirtualDom_node('select');
 var elm$html$Html$Attributes$for = elm$html$Html$Attributes$stringProperty('htmlFor');
@@ -9474,25 +9480,27 @@ var author$project$Templates$Forms$getConfigRow = function (model) {
 								elm$html$Html$Attributes$id('fState'),
 								elm_community$html_extra$Html$Events$Extra$onChange(author$project$Devs$TypeObject$SetFedState)
 							]),
-						_List_fromArray(
-							[
-								A3(author$project$Templates$Utils$getOption, 'BW', model.aW.aj, 'Baden-Würtemberg'),
-								A3(author$project$Templates$Utils$getOption, 'BY', model.aW.aj, 'Bayern'),
-								A3(author$project$Templates$Utils$getOption, 'BE', model.aW.aj, 'Berlin'),
-								A3(author$project$Templates$Utils$getOption, 'BB', model.aW.aj, 'Brandenburg'),
-								A3(author$project$Templates$Utils$getOption, 'HB', model.aW.aj, 'Bremen'),
-								A3(author$project$Templates$Utils$getOption, 'HH', model.aW.aj, 'Hamburg'),
-								A3(author$project$Templates$Utils$getOption, 'HE', model.aW.aj, 'Hessen'),
-								A3(author$project$Templates$Utils$getOption, 'MV', model.aW.aj, 'Mecklenburg-Vorpommern'),
-								A3(author$project$Templates$Utils$getOption, 'NI', model.aW.aj, 'Niedersachsen'),
-								A3(author$project$Templates$Utils$getOption, 'NW', model.aW.aj, 'Nordrhein-Westfalen'),
-								A3(author$project$Templates$Utils$getOption, 'RP', model.aW.aj, 'Rheinland-Pfalz'),
-								A3(author$project$Templates$Utils$getOption, 'SL', model.aW.aj, 'Saarland'),
-								A3(author$project$Templates$Utils$getOption, 'SN', model.aW.aj, 'Sachsen'),
-								A3(author$project$Templates$Utils$getOption, 'ST', model.aW.aj, 'Sachsen-Anhalt'),
-								A3(author$project$Templates$Utils$getOption, 'SH', model.aW.aj, 'Schleswig-Holstein'),
-								A3(author$project$Templates$Utils$getOption, 'TH', model.aW.aj, 'Thüringen')
-							]))
+						A2(
+							elm$core$List$map,
+							author$project$Templates$Forms$getOption(model),
+							_List_fromArray(
+								[
+									_Utils_Tuple2('BY', 'Bayern'),
+									_Utils_Tuple2('BE', 'Berlin'),
+									_Utils_Tuple2('BB', 'Brandenburg'),
+									_Utils_Tuple2('HB', 'Bremen'),
+									_Utils_Tuple2('HH', 'Hamburg'),
+									_Utils_Tuple2('HE', 'Hessen'),
+									_Utils_Tuple2('MV', 'Mecklenburg-Vorpommern'),
+									_Utils_Tuple2('NI', 'Niedersachsen'),
+									_Utils_Tuple2('NW', 'Nordrhein-Westfalen'),
+									_Utils_Tuple2('RP', 'Rheinland-Pfalz'),
+									_Utils_Tuple2('SL', 'Saarland'),
+									_Utils_Tuple2('SN', 'Sachsen'),
+									_Utils_Tuple2('ST', 'Sachsen-Anhalt'),
+									_Utils_Tuple2('SH', 'Schleswig-Holstein'),
+									_Utils_Tuple2('TH', 'Thüringen')
+								])))
 					])),
 				A2(
 				elm$html$Html$div,

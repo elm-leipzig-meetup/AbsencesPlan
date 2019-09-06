@@ -82,30 +82,32 @@ getConfigRow model =
       ]
       , Html.div[][
         Html.label [ Attr.for "fState" ][ Html.text "B-Land:" ]
-        , Html.select [ Attr.id "fState", EvE.onChange TO.SetFedState ][
-          TU.getOption "BW" model.config.fedState "Baden-Würtemberg"
-          , TU.getOption "BY" model.config.fedState "Bayern"
-          , TU.getOption "BE" model.config.fedState "Berlin"
-          , TU.getOption "BB" model.config.fedState "Brandenburg"
-          , TU.getOption "HB" model.config.fedState "Bremen"
-          , TU.getOption "HH" model.config.fedState "Hamburg"
-          , TU.getOption "HE" model.config.fedState "Hessen"
-          , TU.getOption "MV" model.config.fedState "Mecklenburg-Vorpommern"
-          , TU.getOption "NI" model.config.fedState "Niedersachsen"
-          , TU.getOption "NW" model.config.fedState "Nordrhein-Westfalen"
-          , TU.getOption "RP" model.config.fedState "Rheinland-Pfalz"
-          , TU.getOption "SL" model.config.fedState "Saarland"
-          , TU.getOption "SN" model.config.fedState "Sachsen"
-          , TU.getOption "ST" model.config.fedState "Sachsen-Anhalt"
-          , TU.getOption "SH" model.config.fedState "Schleswig-Holstein"
-          , TU.getOption "TH" model.config.fedState "Thüringen"
-        ]
+        , Html.select [ Attr.id "fState", EvE.onChange TO.SetFedState ]
+        (List.map (getOption model) [("BY", "Bayern")
+          ,("BE", "Berlin")
+          ,("BB", "Brandenburg")
+          ,("HB", "Bremen")
+          ,("HH", "Hamburg")
+          ,("HE", "Hessen")
+          ,("MV", "Mecklenburg-Vorpommern")
+          ,("NI", "Niedersachsen")
+          ,("NW", "Nordrhein-Westfalen")
+          ,("RP", "Rheinland-Pfalz")
+          ,("SL", "Saarland")
+          ,("SN", "Sachsen")
+          ,("ST", "Sachsen-Anhalt")
+          ,("SH", "Schleswig-Holstein")
+          ,("TH", "Thüringen")]
+        )
       ]
       , Html.div[][
         Html.label [ Attr.for "url" ][ Html.text "API-URL:" ]
         , Html.input [ Attr.type_ "url", Attr.id "url", Attr.value model.config.holidayURL, Ev.onInput TO.SetUrl ][]
       ]
     ]
+
+getOption: Model -> (String, String) -> Html Msg
+getOption model (key, value) = TU.getOption key model.config.fedState value
 
 getFormDiv: Int -> Html Msg -> Msg -> Html Msg
 getFormDiv width subForm event =
