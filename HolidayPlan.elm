@@ -30,9 +30,11 @@ view model =
           , TF.geLoginForm model
           , Html.h1 [][
             Html.text "Kalender des Jahres "
-            , TU.getActionButton "<" True (TO.ShiftYear O.Down)
-            , Html.text (" " ++ (String.fromInt model.calendar.name) ++ " ")
-            , TU.getActionButton ">" True (TO.ShiftYear O.Up)
+            , Html.span [ Attr.class "nobreak" ][
+              TU.getActionButton "<" True (TO.ShiftYear O.Down)
+              , Html.text (" " ++ (String.fromInt model.calendar.name) ++ " ")
+              , TU.getActionButton ">" True (TO.ShiftYear O.Up)
+            ]
           ]
           , Html.div [][
             Html.span [ Attr.style "margin-left" "5pt" ][]

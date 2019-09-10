@@ -10179,18 +10179,27 @@ var author$project$HolidayPlan$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text('Kalender des Jahres '),
-								A3(
-								author$project$Templates$Utils$getActionButton,
-								'<',
-								true,
-								author$project$Devs$TypeObject$ShiftYear(1)),
-								elm$html$Html$text(
-								' ' + (elm$core$String$fromInt(model.ac.M) + ' ')),
-								A3(
-								author$project$Templates$Utils$getActionButton,
-								'>',
-								true,
-								author$project$Devs$TypeObject$ShiftYear(0))
+								A2(
+								elm$html$Html$span,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('nobreak')
+									]),
+								_List_fromArray(
+									[
+										A3(
+										author$project$Templates$Utils$getActionButton,
+										'<',
+										true,
+										author$project$Devs$TypeObject$ShiftYear(1)),
+										elm$html$Html$text(
+										' ' + (elm$core$String$fromInt(model.ac.M) + ' ')),
+										A3(
+										author$project$Templates$Utils$getActionButton,
+										'>',
+										true,
+										author$project$Devs$TypeObject$ShiftYear(0))
+									]))
 							])),
 						A2(
 						elm$html$Html$div,
